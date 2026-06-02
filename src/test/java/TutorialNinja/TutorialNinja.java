@@ -108,7 +108,7 @@ public class TutorialNinja {
 
         driver.findElement(By.linkText("Logout")).click();
 
-        driver.findElement(By.xpath("//span[text()='My Account']")).click();
+        driver.findElement(By.xpath("//a[contains(@title,'My Account')]")).click();
 
         driver.findElement(By.linkText("Login")).click();
 
