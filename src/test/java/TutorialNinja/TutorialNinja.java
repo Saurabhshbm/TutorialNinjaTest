@@ -98,7 +98,13 @@ public class TutorialNinja {
     @When("User login into application")
     public void user_login_into_application() throws InterruptedException {
 
-        driver.findElement(By.xpath("//span[text()='My Account']")).click();
+    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    	WebElement myAccount = wait.until(
+    	        ExpectedConditions.elementToBeClickable(
+    	                By.xpath("//a[contains(@title,'My Account')]")));
+
+    	myAccount.click();
 
         driver.findElement(By.linkText("Logout")).click();
 
@@ -198,7 +204,13 @@ public class TutorialNinja {
     public void user_logout_from_application()
             throws InterruptedException {
 
-        driver.findElement(By.xpath("//span[text()='My Account']")).click();
+    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    	WebElement myAccount = wait.until(
+    	        ExpectedConditions.elementToBeClickable(
+    	                By.xpath("//a[contains(@title,'My Account')]")));
+
+    	myAccount.click();
 
         driver.findElement(By.linkText("Logout")).click();
 
