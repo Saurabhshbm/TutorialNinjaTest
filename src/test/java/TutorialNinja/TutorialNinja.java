@@ -11,7 +11,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.bonigarcia.wdm.WebDriverManager;
-
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 public class TutorialNinja {
 
     WebDriver driver = hooks.driver;
@@ -39,7 +41,13 @@ public class TutorialNinja {
     @When("User registers new account")
     public void user_registers_new_account() throws InterruptedException {
 
-        driver.findElement(By.xpath("//span[text()='My Account']")).click();
+    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    	WebElement myAccount = wait.until(
+    	        ExpectedConditions.elementToBeClickable(
+    	                By.xpath("//span[text()='My Account']")));
+
+    	myAccount.click();
 
         driver.findElement(By.linkText("Register")).click();
 
