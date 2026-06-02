@@ -21,7 +21,7 @@ public class TutorialNinja {
     // Launch Website 
 
     @Given("User launches Tutorial Ninja website")
-    public void user_launches_tutorial_ninja_website() {
+    public void user_launches_tutorial_ninja_website() throws InterruptedException {
 
         WebDriverManager.chromedriver().setup();
 
@@ -32,6 +32,11 @@ public class TutorialNinja {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         driver.get("https://tutorialsninja.com/demo/");
+       
+        Thread.sleep(5000);
+
+        System.out.println("Current URL: " + driver.getCurrentUrl());
+        System.out.println("Page Title: " + driver.getTitle());
 
         System.out.println("Tutorial Ninja Website Opened");
     }
@@ -43,9 +48,15 @@ public class TutorialNinja {
 
     	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
+    	System.out.println("Trying to find My Account");
+
     	WebElement myAccount = wait.until(
-    	        ExpectedConditions.elementToBeClickable(
-    	                By.xpath("//span[text()='My Account']")));
+    	    ExpectedConditions.visibilityOfElementLocated(
+    	        By.xpath("//span[text()='My Account']")));
+
+    	System.out.println("My Account found");
+
+    	myAccount.click();
 
     	myAccount.click();
 
