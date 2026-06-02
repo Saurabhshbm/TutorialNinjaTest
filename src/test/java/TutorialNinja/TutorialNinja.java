@@ -52,13 +52,14 @@ public class TutorialNinja {
 
     	WebElement myAccount = wait.until(
     	    ExpectedConditions.visibilityOfElementLocated(
-    	        By.xpath("//span[text()='My Account']")));
+    	    		By.xpath("//a[contains(@title,'My Account')]")
+    	    		)
+    	    );
 
     	System.out.println("My Account found");
 
     	myAccount.click();
 
-    	myAccount.click();
 
         driver.findElement(By.linkText("Register")).click();
 
