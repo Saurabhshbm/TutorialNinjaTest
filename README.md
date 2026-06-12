@@ -324,5 +324,177 @@ public class SearchTest extends BaseTest {
     }
 }
 
+package utils;
+
+import java.io.FileInputStream;
+import java.util.Properties;
+
+public class ConfigReader {
+
+    Properties prop;
+
+    public ConfigReader() {
+        try {
+            FileInputStream fis =
+                    new FileInputStream("src/test/resources/config.properties");
+
+            prop = new Properties();
+            prop.load(fis);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getProperty(String key) {
+        return prop.getProperty(key);
+    }
+}
+
+
+url=https://tutorialsninja.com/demo/
+browser=chrome
+email=test@gmail.com
+password=test123
+
+package utils;
+
+import java.io.File;
+import org.openqa.selenium.*;
+import org.openqa.selenium.io.FileHandler;
+
+public class ScreenshotUtil {
+
+    public static void capture(WebDriver driver, String name) {
+
+        try {
+
+            File src =
+                    ((TakesScreenshot) driver)
+                            .getScreenshotAs(OutputType.FILE);
+
+            File dest =
+                    new File("screenshots/" + name + ".png");
+
+            FileHandler.copy(src, dest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+package listeners;
+
+import org.testng.ITestListener;
+import org.testng.ITestResult;
+
+import factory.DriverFactory;
+import utils.ScreenshotUtil;
+
+public class TestListener implements ITestListener {
+
+    @Override
+    public void onTestFailure(ITestResult result) {
+
+        ScreenshotUtil.capture(
+                DriverFactory.getDriver(),
+                result.getName());
+    }
+}
+
+
+package utils;
+
+import com.aventstack.extentreports.*;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+public class ExtentReportManager {
+
+    public static ExtentReports getReport() {
+
+        ExtentSparkReporter spark =
+                new ExtentSparkReporter("Reports/ExtentReport.html");
+
+        ExtentReports extent = new ExtentReports();
+
+        extent.attachReporter(spark);
+
+        return extent;
+    }
+}
+
+package factory;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class DriverFactory {
+
+    static WebDriver driver;
+
+    public static WebDriver initDriver(String browser) {
+
+        if(browser.equalsIgnoreCase("chrome")) {
+
+            driver = new ChromeDriver();
+
+        } else if(browser.equalsIgnoreCase("firefox")) {
+
+            driver = new FirefoxDriver();
+
+        } else {
+
+            driver = new EdgeDriver();
+        }
+
+        driver.manage().window().maximize();
+
+        return driver;
+    }
+
+    public static WebDriver getDriver() {
+        return driver;
+    }
+}
+
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'YOUR_GITHUB_URL'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn clean'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+        }
+
+        stage('Report') {
+            steps {
+                publishHTML([
+                    reportDir: 'Reports',
+                    reportFiles: 'ExtentReport.html',
+                    reportName: 'Automation Report'
+                ])
+            }
+        }
+    }
+}
+
 
 
